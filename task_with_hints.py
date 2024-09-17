@@ -32,9 +32,9 @@ data = (
 # we need to compute the set of all combinations and join it to the data
 
 # %%
-key = data.select("division").unique()
+key = pl.DataFrame({"month": range(1, 13)}, schema={"month": data["month"].dtype})
 
-for col in ("year", "month", "lineage"):
+for col in ("year", "division", "lineage"):
     key = key.join(__________________, how="cross")
 
 # %%
@@ -53,6 +53,7 @@ result = (
         proportion=__________________,
     )
     .fill_nan(None)
+    .drop(__________________)
 )
 
 # %%

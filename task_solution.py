@@ -29,9 +29,9 @@ data = (
 # To have one row for each possible division-year-month-lineage combination,
 # we need to compute the set of all combinations and join it to the data
 
-key = data.select("division").unique()
+key = pl.DataFrame({"month": range(1, 13)}, schema={"month": data["month"].dtype})
 
-for col in ("year", "month", "lineage"):
+for col in ("year", "division", "lineage"):
     key = key.join(data.select(col).unique(), how="cross")
 
 data = key.join(
@@ -48,6 +48,7 @@ result = (
         proportion=pl.col("count") / pl.col("total_count"),
     )
     .fill_nan(None)
+    .drop("count", "total_count")
 )
 
 result.write_csv("result.csv")
